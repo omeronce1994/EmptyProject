@@ -33,7 +33,7 @@ class BooksAdapter: ListAdapter<Book, BooksAdapter.BookViewHolder>(diffCallback)
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Book>() {
             override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
-                return oldItem.url == oldItem.url
+                return oldItem.url == newItem.url
             }
 
             override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {

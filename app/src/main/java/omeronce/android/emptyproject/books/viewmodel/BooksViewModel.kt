@@ -5,7 +5,11 @@ import kotlinx.coroutines.launch
 import omeronce.android.emptyproject.books.repository.BooksRepository
 import omeronce.android.emptyproject.view.base.BaseViewModel
 
-class BooksViewModel(val booksRepository: BooksRepository): BaseViewModel() {
+class BooksViewModel(private val booksRepository: BooksRepository): BaseViewModel() {
+
+    init {
+        getBooks()
+    }
 
     val books = booksRepository.observeBooks()
 
