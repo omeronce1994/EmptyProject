@@ -9,7 +9,7 @@ class ApiGateway {
 
     private suspend fun<T : Any> getResult(call: suspend () -> Response<T>): Result<T> {
         try {
-            val response = call()
+            val response = call.invoke()
             if(response.isSuccessful) {
                 val body = response.body()
                 if(body != null) {
