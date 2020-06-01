@@ -10,14 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import omeronce.android.emptyproject.BR
 import omeronce.android.emptyproject.R
-import omeronce.android.emptyproject.books.adapter.BooksAdapter
 import omeronce.android.emptyproject.books.viewmodel.BooksViewModel
 import omeronce.android.emptyproject.databinding.FragmentBooksBinding
-import omeronce.android.emptyproject.databinding.ItemBookBinding
 import omeronce.android.emptyproject.model.Result
 import omeronce.android.emptyproject.model.books.Book
 import omeronce.android.emptyproject.view.base.BaseFragment
-import omeronce.android.onelineradapter.OneLinerAdapter
+import omeronce.android.onelineradapter.adapters.OneLinerAdapter
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BooksFragment: BaseFragment() {
