@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <omeronce.android.emptyproject.scannovate.camera.AutoFitTextureView
+        <omeronce.android.emptyproject.scannovate.camera.helper.AutoFitTextureView
             android:id="@+id/texture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

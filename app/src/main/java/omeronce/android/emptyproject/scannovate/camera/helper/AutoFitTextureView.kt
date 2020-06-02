@@ -1,4 +1,4 @@
-package omeronce.android.emptyproject.scannovate.camera
+package omeronce.android.emptyproject.scannovate.camera.helper
 
 import android.content.Context
 import android.util.AttributeSet

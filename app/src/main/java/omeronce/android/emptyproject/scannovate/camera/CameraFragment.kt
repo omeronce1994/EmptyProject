@@ -1,14 +1,6 @@
 package omeronce.android.emptyproject.scannovate.camera
 
-import android.content.Context
-import android.graphics.ImageFormat
-import android.hardware.camera2.CameraCaptureSession
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraDevice
-import android.hardware.camera2.CameraManager
-import android.media.ImageReader
 import android.os.Bundle
-import android.os.Handler
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresPermission
@@ -19,6 +11,7 @@ import omeronce.android.emptyproject.Const.Companion.PIC_FILE_NAME
 import omeronce.android.emptyproject.R
 import omeronce.android.emptyproject.databinding.FragmentCameraBinding
 import omeronce.android.emptyproject.model.Result
+import omeronce.android.emptyproject.scannovate.camera.helper.CameraFragmentHelper
 import omeronce.android.emptyproject.scannovate.camera.viewmodel.CameraViewModel
 import omeronce.android.emptyproject.view.base.BaseFragment
 import org.koin.android.viewmodel.ext.android.viewModel

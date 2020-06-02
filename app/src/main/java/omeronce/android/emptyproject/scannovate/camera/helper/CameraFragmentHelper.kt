@@ -1,4 +1,4 @@
-package omeronce.android.emptyproject.scannovate.camera
+package omeronce.android.emptyproject.scannovate.camera.helper
 
 /*
  * Copyright 2017 The Android Open Source Project
@@ -18,7 +18,6 @@ package omeronce.android.emptyproject.scannovate.camera
 
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.ImageFormat
@@ -130,7 +129,12 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
      * still image is ready to be saved.
      */
     private val onImageAvailableListener = ImageReader.OnImageAvailableListener {
-        backgroundHandler?.post(ImageSaver(it.acquireNextImage(), file))
+        backgroundHandler?.post(
+            ImageSaver(
+                it.acquireNextImage(),
+                file
+            )
+        )
         val runnable = captureResultQueue.poll()
         runnable?.let {
             backgroundHandler?.post(Runnable {
@@ -170,7 +174,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
      *
      * @see .captureCallback
      */
-    private var state = STATE_PREVIEW
+    private var state =
+        STATE_PREVIEW
 
     /**
      * A [Semaphore] to prevent the app from exiting before closing the camera.
@@ -202,14 +207,16 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                     if (aeState == null ||
                         aeState == CaptureResult.CONTROL_AE_STATE_PRECAPTURE ||
                         aeState == CaptureRequest.CONTROL_AE_STATE_FLASH_REQUIRED) {
-                        state = STATE_WAITING_NON_PRECAPTURE
+                        state =
+                            STATE_WAITING_NON_PRECAPTURE
                     }
                 }
                 STATE_WAITING_NON_PRECAPTURE -> {
                     // CONTROL_AE_STATE can be null on some devices
                     val aeState = result.get(CaptureResult.CONTROL_AE_STATE)
                     if (aeState == null || aeState != CaptureResult.CONTROL_AE_STATE_PRECAPTURE) {
-                        state = STATE_PICTURE_TAKEN
+                        state =
+                            STATE_PICTURE_TAKEN
                         captureStillPicture()
                     }
                 }
@@ -225,7 +232,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                 // CONTROL_AE_STATE can be null on some devices
                 val aeState = result.get(CaptureResult.CONTROL_AE_STATE)
                 if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
-                    state = STATE_PICTURE_TAKEN
+                    state =
+                        STATE_PICTURE_TAKEN
                     captureStillPicture()
                 } else {
                     runPrecaptureSequence()
@@ -311,7 +319,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                 // For still image captures, we use the largest available size.
                 val largest = Collections.max(
                     Arrays.asList(*map.getOutputSizes(ImageFormat.JPEG)),
-                    CompareSizesByArea())
+                    CompareSizesByArea()
+                )
                 imageReader = ImageReader.newInstance(largest.width, largest.height,
                     ImageFormat.JPEG, /*maxImages*/ 2).apply {
                     setOnImageAvailableListener(onImageAvailableListener, backgroundHandler)
@@ -331,16 +340,21 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                 var maxPreviewWidth = if (swappedDimensions) displaySize.y else displaySize.x
                 var maxPreviewHeight = if (swappedDimensions) displaySize.x else displaySize.y
 
-                if (maxPreviewWidth > MAX_PREVIEW_WIDTH) maxPreviewWidth = MAX_PREVIEW_WIDTH
-                if (maxPreviewHeight > MAX_PREVIEW_HEIGHT) maxPreviewHeight = MAX_PREVIEW_HEIGHT
+                if (maxPreviewWidth > MAX_PREVIEW_WIDTH) maxPreviewWidth =
+                    MAX_PREVIEW_WIDTH
+                if (maxPreviewHeight > MAX_PREVIEW_HEIGHT) maxPreviewHeight =
+                    MAX_PREVIEW_HEIGHT
 
                 // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
                 // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
                 // garbage capture data.
-                previewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture::class.java),
-                    rotatedPreviewWidth, rotatedPreviewHeight,
-                    maxPreviewWidth, maxPreviewHeight,
-                    largest)
+                previewSize =
+                    chooseOptimalSize(
+                        map.getOutputSizes(SurfaceTexture::class.java),
+                        rotatedPreviewWidth, rotatedPreviewHeight,
+                        maxPreviewWidth, maxPreviewHeight,
+                        largest
+                    )
 
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -563,7 +577,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
             previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                 CameraMetadata.CONTROL_AF_TRIGGER_START)
             // Tell #captureCallback to wait for the lock.
-            state = STATE_WAITING_LOCK
+            state =
+                STATE_WAITING_LOCK
             captureSession?.capture(previewRequestBuilder.build(), captureCallback,
                 backgroundHandler)
         } catch (e: CameraAccessException) {
@@ -582,7 +597,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
             previewRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                 CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_START)
             // Tell #captureCallback to wait for the precapture sequence to be set.
-            state = STATE_WAITING_PRECAPTURE
+            state =
+                STATE_WAITING_PRECAPTURE
             captureSession?.capture(previewRequestBuilder.build(), captureCallback,
                 backgroundHandler)
         } catch (e: CameraAccessException) {
@@ -655,7 +671,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
             captureSession?.capture(previewRequestBuilder.build(), captureCallback,
                 backgroundHandler)
             // After this, the camera will go back to the normal state of preview.
-            state = STATE_PREVIEW
+            state =
+                STATE_PREVIEW
             captureSession?.setRepeatingRequest(previewRequest, captureCallback,
                 backgroundHandler)
         } catch (e: CameraAccessException) {
@@ -771,9 +788,13 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
             // Pick the smallest of those big enough. If there is no one big enough, pick the
             // largest of those not big enough.
             if (bigEnough.size > 0) {
-                return Collections.min(bigEnough, CompareSizesByArea())
+                return Collections.min(bigEnough,
+                    CompareSizesByArea()
+                )
             } else if (notBigEnough.size > 0) {
-                return Collections.max(notBigEnough, CompareSizesByArea())
+                return Collections.max(notBigEnough,
+                    CompareSizesByArea()
+                )
             } else {
                 Log.e(TAG, "Couldn't find any suitable preview size")
                 return choices[0]

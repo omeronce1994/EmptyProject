@@ -3,13 +3,12 @@ package omeronce.android.emptyproject.scannovate.camera.viewmodel
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import omeronce.android.emptyproject.Const
 import omeronce.android.emptyproject.model.Result
-import omeronce.android.emptyproject.scannovate.camera.AutoFitTextureView
-import omeronce.android.emptyproject.scannovate.camera.CameraFragmentHelper
+import omeronce.android.emptyproject.scannovate.camera.helper.AutoFitTextureView
+import omeronce.android.emptyproject.scannovate.camera.helper.CameraFragmentHelper
 import omeronce.android.emptyproject.scannovate.camera.repository.RequestRepository
 import omeronce.android.emptyproject.view.base.BaseViewModel
 import java.io.File
@@ -33,7 +32,12 @@ class CameraViewModel(private val requestRepository: RequestRepository): BaseVie
     }
 
     fun initCameraHelper(fragment: Fragment?, textureView: AutoFitTextureView?, file: File) {
-        cameraFragmentHelper = CameraFragmentHelper(fragment, textureView, file)
+        cameraFragmentHelper =
+            CameraFragmentHelper(
+                fragment,
+                textureView,
+                file
+            )
         cameraFragmentHelper.onPictureCapturedListener = {
             getJson(byteArray = file.readBytes())
         }
