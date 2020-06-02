@@ -12,5 +12,6 @@ class Const {
         const val FLOW_ID = "2"
         const val CAMERA_PERMISSION_CODE = 0
         const val CAMERA_PERMISSION = Manifest.permission.CAMERA
+        const val PIC_FILE_NAME = "pic.jpg"
     }
 }

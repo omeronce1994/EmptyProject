@@ -38,6 +38,7 @@ import android.hardware.camera2.TotalCaptureResult
 import android.media.ImageReader
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
 import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
@@ -51,11 +52,12 @@ import omeronce.android.emptyproject.R
 import java.io.File
 import java.util.Arrays
 import java.util.Collections
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitTextureView?, val file: File) : Fragment(){
+class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitTextureView?, val file: File){
 
     /**
      * [TextureView.SurfaceTextureListener] handles several lifecycle events on a
@@ -119,6 +121,23 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
             this@CameraFragmentHelper.fragment?.activity?.finish()
         }
 
+    }
+
+    private val captureResultQueue = ArrayBlockingQueue<Runnable>(2)
+
+    /**
+     * This a callback object for the [ImageReader]. "onImageAvailable" will be called when a
+     * still image is ready to be saved.
+     */
+    private val onImageAvailableListener = ImageReader.OnImageAvailableListener {
+        backgroundHandler?.post(ImageSaver(it.acquireNextImage(), file))
+        val runnable = captureResultQueue.poll()
+        runnable?.let {
+            backgroundHandler?.post(Runnable {
+                val handler = Handler(Looper.getMainLooper())
+                handler.post(it)
+            })
+        }
     }
 
     /**
@@ -228,6 +247,8 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
 
     }
 
+    var onPictureCapturedListener: ((imageFile: File) -> Unit)? = null
+
     init {
         fragment?.lifecycle?.addObserver(MyLifeCycleObserver())
     }
@@ -260,6 +281,7 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
         fun release() {
             fragment = null
             textureView = null
+            onPictureCapturedListener = null
         }
     }
 
@@ -292,6 +314,7 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                     CompareSizesByArea())
                 imageReader = ImageReader.newInstance(largest.width, largest.height,
                     ImageFormat.JPEG, /*maxImages*/ 2).apply {
+                    setOnImageAvailableListener(onImageAvailableListener, backgroundHandler)
                 }
 
                 // Find out if we need to swap dimension to get the preview size relative to sensor
@@ -320,7 +343,7 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                     largest)
 
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     textureView?.setAspectRatio(previewSize.width, previewSize.height)
                 } else {
                     textureView?.setAspectRatio(previewSize.height, previewSize.width)
@@ -527,6 +550,10 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
         textureView?.setTransform(matrix)
     }
 
+    fun captureImage() {
+        lockFocus()
+    }
+
     /**
      * Lock the focus as the first step for a still image capture.
      */
@@ -597,8 +624,10 @@ class CameraFragmentHelper(var fragment: Fragment?, var textureView: AutoFitText
                 override fun onCaptureCompleted(session: CameraCaptureSession,
                                                 request: CaptureRequest,
                                                 result: TotalCaptureResult) {
-                    Log.d(TAG, file.toString())
-                    unlockFocus()
+                    captureResultQueue.add(Runnable {
+                        onPictureCapturedListener?.invoke(file)
+                        unlockFocus()
+                    })
                 }
             }
 
