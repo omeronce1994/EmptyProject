@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">EmptyProject</string>
+    <string name="label_take_picture">Take Picture</string>
+    <string name="label_capture">Capture</string>
+    <string name="error_message_unknown">Unknown Error</string>
 </resources>
