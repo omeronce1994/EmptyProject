@@ -3,4 +3,5 @@
     <string name="label_take_picture">Take Picture</string>
     <string name="label_capture">Capture</string>
     <string name="error_message_unknown">Unknown Error</string>
+    <string name="message_succesful_request">Successful Request</string>
 </resources>

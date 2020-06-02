@@ -1,5 +1,6 @@
 package omeronce.android.emptyproject.model.network
 
+import android.util.Log
 import okhttp3.ResponseBody
 import omeronce.android.emptyproject.model.Result
 import retrofit2.HttpException
@@ -36,6 +37,7 @@ class ApiGateway {
             return Result.Error(HttpException(response))
         }
         catch (exception: Exception) {
+            Log.i("Apigateway", exception.javaClass.canonicalName)
             return Result.Error(exception)
         }
     }

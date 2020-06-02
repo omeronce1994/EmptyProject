@@ -16,5 +16,5 @@ interface WebApi {
 
     @Multipart
     @PUT("api/inquiries/")
-    fun getJson(@Body cameraRequest: CameraRequest, @Part filePart:  MultipartBody.Part): Response<ResponseBody>
+    suspend fun getJson(@Part("flowId") id: RequestBody, @Part filePart:  MultipartBody.Part): Response<ResponseBody>
 }

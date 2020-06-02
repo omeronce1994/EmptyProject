@@ -1,5 +1,6 @@
 package omeronce.android.emptyproject.di.module
 
+import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import omeronce.android.emptyproject.Const
@@ -11,11 +12,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val networkModule = module {
+    factory { provideLoggingInterceptor() }
     factory { AuthInterceptor(get()) }
     factory { provideOkHttpClient(get(), get()) }
-    factory { provideApi(get()) }
-    factory { provideLoggingInterceptor() }
     single { provideRetrofit(get()) }
+    factory { provideApi(get()) }
     single { provideApiGateway() }
 }
 
@@ -25,13 +26,18 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
 }
 
 fun provideOkHttpClient(authInterceptor: AuthInterceptor, loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-    return OkHttpClient().newBuilder().addInterceptor(authInterceptor).addInterceptor(loggingInterceptor).build()
+    return OkHttpClient().newBuilder().addInterceptor(loggingInterceptor).addInterceptor(authInterceptor).build()
 }
 
 fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-    val logger = HttpLoggingInterceptor()
-    logger.level = HttpLoggingInterceptor.Level.BASIC
-    return logger
+    val logger = object : HttpLoggingInterceptor.Logger {
+        override fun log(message: String) {
+            Log.i("OkHttp", message);
+        }
+    }
+    val interceptor = HttpLoggingInterceptor(logger)
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+    return interceptor
 }
 
 fun provideApi(retrofit: Retrofit): WebApi = retrofit.create(WebApi::class.java)

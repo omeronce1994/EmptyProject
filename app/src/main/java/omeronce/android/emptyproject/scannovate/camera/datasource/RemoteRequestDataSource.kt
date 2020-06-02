@@ -11,10 +11,10 @@ import omeronce.android.emptyproject.model.network.camera.CameraRequest
 class RemoteRequestDataSource(private val webApi: WebApi, private val apiGateway: ApiGateway): RequestDataSource {
 
     override suspend fun getJson(flowId: String, byteArray: ByteArray) =
-        apiGateway.getStringResult { webApi.getJson(CameraRequest(flowId),toMultiPartFile(byteArray = byteArray)) }
+        apiGateway.getStringResult { webApi.getJson(toMultipartText(flowId),toMultiPartFile(byteArray = byteArray)) }
 
-    fun toMultiPartFile(
-        name: String = "tempFile",
+    private fun toMultiPartFile(
+        name: String = "upload",
         byteArray: ByteArray
     ): MultipartBody.Part {
         val reqFile = RequestBody.create("image/*".toMediaTypeOrNull(), byteArray)
@@ -24,4 +24,6 @@ class RemoteRequestDataSource(private val webApi: WebApi, private val apiGateway
             reqFile
         )
     }
+
+    private fun toMultipartText(text: String) = RequestBody.create("text/plain".toMediaTypeOrNull(), text)
 }
