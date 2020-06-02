@@ -5,7 +5,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import omeronce.android.emptyproject.model.network.ApiGateway
 import omeronce.android.emptyproject.model.network.WebApi
-import omeronce.android.emptyproject.model.network.camera.CameraRequest
 
 
 class RemoteRequestDataSource(private val webApi: WebApi, private val apiGateway: ApiGateway): RequestDataSource {
