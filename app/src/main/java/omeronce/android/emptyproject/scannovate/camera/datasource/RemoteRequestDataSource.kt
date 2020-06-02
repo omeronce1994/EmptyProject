@@ -1,6 +1,6 @@
 package omeronce.android.emptyproject.scannovate.camera.datasource
 
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import omeronce.android.emptyproject.model.network.ApiGateway
@@ -16,7 +16,7 @@ class RemoteRequestDataSource(private val webApi: WebApi, private val apiGateway
         name: String = "upload",
         byteArray: ByteArray
     ): MultipartBody.Part {
-        val reqFile = RequestBody.create("image/*".toMediaTypeOrNull(), byteArray)
+        val reqFile = RequestBody.create(MediaType.parse("image/*"), byteArray)
         return MultipartBody.Part.createFormData(
             name,
             null,  // filename, this is optional
@@ -24,5 +24,5 @@ class RemoteRequestDataSource(private val webApi: WebApi, private val apiGateway
         )
     }
 
-    private fun toMultipartText(text: String) = RequestBody.create("text/plain".toMediaTypeOrNull(), text)
+    private fun toMultipartText(text: String) = RequestBody.create(MediaType.parse("text/plain"), text)
 }
