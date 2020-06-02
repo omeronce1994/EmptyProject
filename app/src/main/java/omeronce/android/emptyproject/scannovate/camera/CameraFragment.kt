@@ -41,7 +41,7 @@ class CameraFragment: BaseFragment(), ActivityCompat.OnRequestPermissionsResultC
     private val viewModel: CameraViewModel by viewModel()
     private lateinit var binding: FragmentCameraBinding
     val surfaceReadyCallback = object: SurfaceHolder.Callback {
-        override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) { }
+        override fun surfaceChanged(p0: SurfaceHolder?, format: Int, width: Int, height: Int) { }
         override fun surfaceDestroyed(p0: SurfaceHolder?) { }
 
         override fun surfaceCreated(p0: SurfaceHolder?) {
