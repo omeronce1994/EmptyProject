@@ -14,7 +14,6 @@ class BooksViewModel(private val booksRepository: BooksRepository): BaseViewMode
 
 
     val books: LiveData<Result<List<Book>>> by lazy { booksRepository.observeBooks().also { getBooks() } }
-    //val books = booksRepository.observeBooks()
 
     fun getBooks() {
         _showLoading.value = true
