@@ -2,6 +2,8 @@ package omeronce.android.emptyproject.books.datasource
 
 import android.app.Application
 import android.content.Context
+import android.os.OperationCanceledException
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,20 +19,29 @@ import java.lang.Exception
 
 class RemoteBookDataSource(private val dispatcher: CoroutineDispatcher = Dispatchers.IO): BooksDataSource, KoinComponent {
 
+    private val books by lazy { MutableLiveData<Result<List<Book>>>() }
+
     override suspend fun getBooks(): Result<List<Book>> = withContext(dispatcher){
         val application = get<Context>()
         val file_name = "books.json"
+        var result: Result<List<Book>>
         try {
             val json_string = application.assets.open(file_name).bufferedReader().use{
                 it.readText()
             }
             val gson = Gson()
             val booksResult = gson.fromJson<BooksResult>(json_string, BooksResult::class.java)
-            Result.Success(booksResult.data)
+            result = Result.Success(booksResult.data)
         }
         catch (exception: Exception) {
             exception.printStackTrace()
-            Result.Error(exception)
+            result = Result.Error(exception)
         }
+        books.postValue(result)
+        result
     }
+
+    override suspend fun insertBooks(books: List<Book>): Result<List<Book>> = Result.Error(OperationCanceledException("no real remote database, cant insert data!"))
+
+    override fun observerBooks(): LiveData<Result<List<Book>>> = books
 }

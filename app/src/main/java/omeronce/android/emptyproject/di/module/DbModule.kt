@@ -7,10 +7,13 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val dbModule = module {
-    single {  buildDb(androidContext())  }
+    single { provideBooksDao(get()) }
+    single { buildDb(androidContext())  }
 }
 
 fun buildDb(context: Context) =
     Room.databaseBuilder(context, AppDB::class.java, "app-db")
         .fallbackToDestructiveMigration()
         .build()
+
+fun provideBooksDao(appDB: AppDB) = appDB.booksDao()

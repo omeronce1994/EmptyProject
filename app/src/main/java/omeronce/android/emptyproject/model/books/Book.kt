@@ -2,15 +2,28 @@ package omeronce.android.emptyproject.model.books
 
 
 import androidx.recyclerview.widget.DiffUtil
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
+@Entity(tableName = "books")
 data class Book(
+    @PrimaryKey
+    @ColumnInfo(name = "entryid")
+    val id: String = UUID.randomUUID().toString(),
+    @ColumnInfo(name = "body")
     @SerializedName("body")
     val body: String = "",
+    @Embedded
     @SerializedName("placeholderColor")
     val placeholderColor: PlaceholderColor = PlaceholderColor(),
+    @ColumnInfo(name = "title")
     @SerializedName("title")
     val title: String = "",
+    @ColumnInfo(name = "url")
     @SerializedName("url")
     val url: String = ""
 ) {
