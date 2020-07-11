@@ -9,8 +9,6 @@ import omeronce.android.emptyproject.model.books.Book
 
 class BooksRepositoryImpl(private val remoteDataSource: BooksDataSource, private val localDataSource: BooksDataSource): BooksRepository {
 
-    private val books: MutableLiveData<Result<List<Book>>> by lazy { MutableLiveData<Result<List<Book>>>() }
-
     override suspend fun getBooks(): Result<List<Book>> {
         var result = remoteDataSource.getBooks()
         if(result is Result.Success) {

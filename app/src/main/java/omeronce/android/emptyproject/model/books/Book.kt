@@ -11,9 +11,6 @@ import java.util.*
 
 @Entity(tableName = "books")
 data class Book(
-    @PrimaryKey
-    @ColumnInfo(name = "entryid")
-    val id: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "body")
     @SerializedName("body")
     val body: String = "",
@@ -25,7 +22,10 @@ data class Book(
     val title: String = "",
     @ColumnInfo(name = "url")
     @SerializedName("url")
-    val url: String = ""
+    val url: String = "",
+    @PrimaryKey
+    @ColumnInfo(name = "entryid")
+    val id: String = UUID.randomUUID().toString()
 ) {
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<Book>() {
