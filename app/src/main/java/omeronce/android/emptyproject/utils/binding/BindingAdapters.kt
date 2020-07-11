@@ -23,8 +23,11 @@ fun bindImageFromUrl(view: ImageView, imageUri: String?) {
 
 @BindingAdapter("imageBook")
 fun bindBook(view: ImageView, book: Book) {
-
     val placeholder = ColorDrawable(Color.rgb(book.placeholderColor.red, book.placeholderColor.green, book.placeholderColor.blue))
+    if(book.url.isEmpty()) {
+        view.setImageDrawable(placeholder)
+        return
+    }
     //just load image to view (no need to consider ratio in our case)
     Picasso.get().load(book.url).placeholder(placeholder).fit().into(view, object : Callback {
         override fun onSuccess() {

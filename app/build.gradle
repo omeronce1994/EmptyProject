@@ -16,10 +16,11 @@ android {
         def fileProviderPath =  "${applicationId}.fileprovider"
         buildConfigField "String", "fileProviderPath", "\"${fileProviderPath}\""
         manifestPlaceholders = ["fileProviderPath":"${fileProviderPath}"]
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "omeronce.android.emptyproject.KoinTestRunner"
     }
 
     buildTypes {
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -32,6 +33,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
 }
 
 dependencies {
@@ -40,15 +45,16 @@ dependencies {
     def koin_version= "2.1.5"
     def picasso_version = "2.71828"
     def rx_android_version = "1.2.1"
-    def activity_manager_version = "v1.0.0"
+    def activity_manager_version = "v1.0.1"
     def one_liner_adapter_version = "1.0.0"
     def retrofit_version = "2.8.1"
     def retrofit_log_interceptor_version = "4.6.0"
     def mockito = "2.2.0"
     def archTestingVersion = "2.1.0"
     def coroutinesVersion = "1.2.1"
-    def fragmentVersion = "1.2.5"
-    def androidXTestCoreVersion = "1.0.0"
+    def fragmentVersion = "1.2.0-rc02"
+    def androidXTestCoreVersion = "1.2.0"
+    def dexMakerVersion = "2.28.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -80,9 +86,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito"
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito"
+    androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
 
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    androidTestImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
-    androidTestImplementation "androidx.test:core:$androidXTestCoreVersion"
+    debugImplementation "androidx.fragment:fragment-testing:$fragmentVersion"
+    debugImplementation "androidx.test:core:$androidXTestCoreVersion"
 }

@@ -1,6 +1,7 @@
 package omeronce.android.emptyproject
 
 import android.app.Application
+import android.util.Log
 import omeronce.android.emptyproject.di.appModules
 import omeronce.android.smartactivitymanager.SmartActivityManager
 import org.koin.android.ext.koin.androidContext
