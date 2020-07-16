@@ -29,6 +29,15 @@ class LocalBooksDataSource(private val booksDao: BooksDao, private val dispatche
         }
     }
 
+    override suspend fun deleteAllBooks(): Result<Any> = withContext(dispatcher) {
+        return@withContext try {
+            booksDao.deleteTasks()
+            Result.Success("success")
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
     override fun observerBooks(): LiveData<Result<List<Book>>> = Transformations.map(booksDao.observeBooks()) {
         Result.Success(it)
     }

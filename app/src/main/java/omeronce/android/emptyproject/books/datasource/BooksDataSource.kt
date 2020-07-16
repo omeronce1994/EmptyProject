@@ -8,5 +8,6 @@ import omeronce.android.emptyproject.model.books.BooksResult
 interface BooksDataSource {
     suspend fun getBooks(): Result<List<Book>>
     suspend fun insertBooks(books: List<Book>): Result<List<Book>>
+    suspend fun deleteAllBooks(): Result<Any>
     fun observerBooks(): LiveData<Result<List<Book>>>
 }

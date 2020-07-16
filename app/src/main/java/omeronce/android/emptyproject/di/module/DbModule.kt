@@ -11,7 +11,10 @@ val dbModule = module {
     single { buildDb(androidContext())  }
 }
 
-fun buildDb(context: Context) =
+fun buildDb(context: Context, inMemory: Boolean = false) = if (inMemory)
+    Room.inMemoryDatabaseBuilder(context, AppDB::class.java)
+        .build()
+    else
     Room.databaseBuilder(context, AppDB::class.java, "app-db")
         .fallbackToDestructiveMigration()
         .build()

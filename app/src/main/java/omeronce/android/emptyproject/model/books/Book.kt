@@ -25,7 +25,7 @@ data class Book(
     val url: String = "",
     @PrimaryKey
     @ColumnInfo(name = "entryid")
-    val id: String = UUID.randomUUID().toString()
+    val id: String = if (url.isEmpty()) UUID.fromString(url).toString() else UUID.randomUUID().toString()
 ) {
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<Book>() {

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import omeronce.android.emptyproject.MyApplication
 import omeronce.android.emptyproject.model.Result
@@ -37,11 +38,14 @@ class RemoteBookDataSource(private val dispatcher: CoroutineDispatcher = Dispatc
             exception.printStackTrace()
             result = Result.Error(exception)
         }
+        delay(2000)
         books.postValue(result)
         result
     }
 
-    override suspend fun insertBooks(books: List<Book>): Result<List<Book>> = Result.Error(OperationCanceledException("no real remote database, cant insert data!"))
+    override suspend fun insertBooks(books: List<Book>): Result<List<Book>> = Result.Error(OperationCanceledException("no real remote database, cant manipulate data!"))
+
+    override suspend fun deleteAllBooks(): Result<Any> = Result.Error(OperationCanceledException("no real remote database, cant manipulate data!"))
 
     override fun observerBooks(): LiveData<Result<List<Book>>> = books
 }

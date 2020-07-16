@@ -18,4 +18,7 @@ interface BooksDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBooks(books: List<Book>)
+
+    @Query("DELETE FROM books")
+    suspend fun deleteTasks()
 }
