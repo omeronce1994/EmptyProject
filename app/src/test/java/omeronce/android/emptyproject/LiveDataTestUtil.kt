@@ -17,6 +17,7 @@ package omeronce.android.emptyproject
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -72,4 +73,22 @@ fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
     } finally {
         removeObserver(observer)
     }
+}
+
+fun <T> LiveData<T>.captureValues(block: () -> Unit): List<T> {
+    val result = mutableListOf<T>()
+    val mediatorLiveData = MediatorLiveData<T>()
+    val dummyObserver = Observer<T> { }
+    val observer = Observer<T> { result.add(it) }
+    try {
+        observeForever(dummyObserver)
+        mediatorLiveData.addSource(this, observer)
+        block()
+    } finally {
+        mediatorLiveData.removeSource(this)
+        removeObserver(dummyObserver)
+    }
+
+
+    return result
 }

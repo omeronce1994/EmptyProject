@@ -6,7 +6,7 @@ import omeronce.android.emptyproject.books.datasource.BooksDataSource
 import omeronce.android.emptyproject.model.Result
 import omeronce.android.emptyproject.model.books.Book
 
-open class FakeBooksRepository(private val data: List<Book> = mutableListOf()): BooksRepository {
+open class FakeBooksRepository(private val data: MutableList<Book> = mutableListOf()): BooksRepository {
 
     private val books by lazy { MutableLiveData<Result<List<Book>>>() }
 
@@ -14,7 +14,20 @@ open class FakeBooksRepository(private val data: List<Book> = mutableListOf()): 
 
     override suspend fun getBooks(): Result<List<Book>> {
         val result = Result.Success(data)
-        books.value = result
         return result
+    }
+
+    override suspend fun saveBooks(books: List<Book>) {
+        data.addAll(books)
+        update()
+    }
+
+    override suspend fun deleteAllBooks() {
+        data.clear()
+        update()
+    }
+
+    private fun update() {
+        books.value = Result.Success(data)
     }
 }

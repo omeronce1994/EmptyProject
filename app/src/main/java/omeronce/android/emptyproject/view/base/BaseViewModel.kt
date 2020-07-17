@@ -1,14 +1,12 @@
 package omeronce.android.emptyproject.view.base
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import omeronce.android.emptyproject.utils.SingleLiveEvent
 
 open class BaseViewModel: ViewModel() {
 
-    protected val _showLoading: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>(false) }
-    val showLoading: LiveData<Boolean> = _showLoading
+    protected val _showLoading by lazy { MediatorLiveData<Boolean>() }
+    val showLoading: LiveData<Boolean> = _showLoading.distinctUntilChanged()
 
     val snackBarEvent = SingleLiveEvent<String>()
 }

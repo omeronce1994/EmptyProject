@@ -9,4 +9,6 @@ interface BooksRepository {
 
     fun observeBooks(): LiveData<Result<List<Book>>>
     suspend fun getBooks(): Result<List<Book>>
+    suspend fun saveBooks(books: List<Book>)
+    suspend fun deleteAllBooks()
 }

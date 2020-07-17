@@ -1,6 +1,7 @@
 {
     "data": [
              {
+               "id": "1",
              "title": "Memoirs of a Geisha",
              "body": "Arthur Golden",
              "placeholderColor": {
@@ -11,6 +12,7 @@
              "url": "https://images.gr-assets.com/books/1388367666s/930.jpg"
              },
              {
+               "id": "2",
              "title": "Obama's Wars",
              "body": "Bob Woodword",
              "placeholderColor": {
@@ -21,6 +23,7 @@
              "url": "https://www.getabstract.com/abstractData/flashFile/obamas-wars-woodward-en-14702_40x60-cb-s43rh90ft8d1g6751ioougf2gb7o6fv.jpg"
              },
              {
+               "id": "3",
              "title": "The Girl with the Pearl Earring",
              "body": "Tracy Chevalier",
              "placeholderColor": {
@@ -31,6 +34,7 @@
              "url": "https://images.gr-assets.com/books/1327197580s/2865.jpg"
              },
              {
+               "id": "4",
              "title": "iCon: Steve Jobs",
              "body": "Jeffrey S. Young and William L. Simon",
              "placeholderColor": {

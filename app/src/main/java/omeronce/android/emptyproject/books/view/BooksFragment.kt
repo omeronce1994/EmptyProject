@@ -47,7 +47,13 @@ class BooksFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBinding()
         initView()
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = booksViewModel
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

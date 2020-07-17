@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 @Entity(tableName = "books")
-data class Book(
+data class Book @JvmOverloads constructor(
     @ColumnInfo(name = "body")
     @SerializedName("body")
     val body: String = "",
@@ -25,7 +25,8 @@ data class Book(
     val url: String = "",
     @PrimaryKey
     @ColumnInfo(name = "entryid")
-    val id: String = if (url.isEmpty()) UUID.fromString(url).toString() else UUID.randomUUID().toString()
+    @SerializedName("id")
+    val id: String = UUID.randomUUID().toString()
 ) {
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<Book>() {
