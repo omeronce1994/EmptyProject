@@ -4,8 +4,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
 import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import omeronce.android.emptyproject.MainCoroutineRule
@@ -47,7 +52,7 @@ class BooksViewModelTest {
             Book("Harry Potter2", PlaceholderColor(255, 100, 50), "Harry Potter2"),
             Book("Harry Potter3", PlaceholderColor(255, 100, 50), "Harry Potter3")
         )
-        repository = spy(FakeBooksRepository(initialData))
+        repository = mock()
         viewModel = BooksViewModel(repository, mainCoroutineRule.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
     }
 
@@ -60,18 +65,21 @@ class BooksViewModelTest {
 
     @Test
     fun getBooks() = mainCoroutineRule.runBlockingTest {
-         viewModel.showLoading.observeForTesting {
-             viewModel.books.observeForTesting {
-                 val loading = viewModel.showLoading.getOrAwaitValue()
-                 println(loading)
-                 assert(loading)
-                 verify(repository, times(1)).observeBooks()
-                 val result = viewModel.books.getOrAwaitValue()
-                 assert(result is Result.Success)
-                 assert((result as Result.Success).value == initialData)
-                 assert(!viewModel.showLoading.getOrAwaitValue())
-             }
-         }
+        val channel = ConflatedBroadcastChannel<List<Book>>()
+        val flow = channel.asFlow().map{
+            Result.Success(it)
+        }
+        whenever(repository.getBooks()).thenReturn(Result.Success(initialData))
+        whenever(repository.observeBooks()).thenReturn(flow)
+        whenever(repository.saveBooks(initialData)).then {
+            val list = it.arguments[0] as List<Book>
+            channel.offer(list)
+        }
 
+        viewModel.books.observeForTesting {
+            val result = viewModel.books.getOrAwaitValue()
+            assert(result is Result.Success)
+            assert((result as Result.Success).value == initialData)
+        }
     }
 }

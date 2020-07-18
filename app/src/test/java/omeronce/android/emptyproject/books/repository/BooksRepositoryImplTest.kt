@@ -67,6 +67,7 @@ class BooksRepositoryImplTest {
             flow.collect {
                 assert(it is Result.Success)
                 assert((it as Result.Success).value == initialData)
+                channel.close()
             }
         }
     }

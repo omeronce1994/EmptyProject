@@ -20,7 +20,7 @@ class BooksViewModel(private val booksRepository: BooksRepository, dispatcher: C
     init {
         deleteAllBooks()
         _showLoading.addSource(books) {
-            Log.i("BooksViewModel", "showLoading source $it")
+           // Log.i("BooksViewModel", "showLoading source $it")
             println(it.toString())
             _showLoading.value = it is Result.Loading || (it is Result.Success && it.value.isNullOrEmpty())
         }
