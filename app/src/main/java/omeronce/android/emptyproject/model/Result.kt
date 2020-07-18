@@ -5,7 +5,7 @@ import java.lang.Exception
 sealed class Result<out T> {
     data class Success<out T>(val value: T): Result<T>()
     data class Loading(val message: String = "Loading..."): Result<Nothing>()
-    data class Error(val exception: Exception): Result<Nothing>()
+    data class Error(val exception: Throwable): Result<Nothing>()
 
     override fun toString(): String {
         return when(this) {

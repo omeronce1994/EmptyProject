@@ -2,6 +2,8 @@ package omeronce.android.emptyproject.books.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import omeronce.android.emptyproject.books.datasource.BooksDataSource
 import omeronce.android.emptyproject.model.Result
 import omeronce.android.emptyproject.model.books.Book
@@ -10,7 +12,9 @@ open class FakeBooksRepository(private val data: MutableList<Book> = mutableList
 
     private val books by lazy { MutableLiveData<Result<List<Book>>>() }
 
-    override fun observeBooks(): LiveData<Result<List<Book>>> = books
+    override fun observeBooks(): Flow<Result<List<Book>>> = flow {
+
+    }
 
     override suspend fun getBooks(): Result<List<Book>> {
         val result = Result.Success(data)

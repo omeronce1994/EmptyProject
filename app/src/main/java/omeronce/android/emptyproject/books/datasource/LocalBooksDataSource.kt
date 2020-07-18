@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.switchMap
 import kotlinx.coroutines.withContext
 import omeronce.android.emptyproject.model.Result
 import omeronce.android.emptyproject.model.books.Book
@@ -38,7 +41,5 @@ class LocalBooksDataSource(private val booksDao: BooksDao, private val dispatche
         }
     }
 
-    override fun observerBooks(): LiveData<Result<List<Book>>> = Transformations.map(booksDao.observeBooks()) {
-        Result.Success(it)
-    }
+    override fun observerBooks(): Flow<Result<List<Book>>> = booksDao.observeBooks().map { Result.Success(it) }
 }

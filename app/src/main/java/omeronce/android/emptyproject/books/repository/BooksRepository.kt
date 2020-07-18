@@ -7,7 +7,7 @@ import omeronce.android.emptyproject.model.books.Book
 
 interface BooksRepository {
 
-    fun observeBooks(): LiveData<Result<List<Book>>>
+    fun observeBooks(): Flow<Result<List<Book>>>
     suspend fun getBooks(): Result<List<Book>>
     suspend fun saveBooks(books: List<Book>)
     suspend fun deleteAllBooks()

@@ -9,6 +9,8 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import omeronce.android.emptyproject.MyApplication
 import omeronce.android.emptyproject.model.Result
@@ -19,8 +21,6 @@ import org.koin.core.get
 import java.lang.Exception
 
 class RemoteBookDataSource(private val dispatcher: CoroutineDispatcher = Dispatchers.IO): BooksDataSource, KoinComponent {
-
-    private val books by lazy { MutableLiveData<Result<List<Book>>>() }
 
     override suspend fun getBooks(): Result<List<Book>> = withContext(dispatcher){
         val application = get<Context>()
@@ -39,7 +39,6 @@ class RemoteBookDataSource(private val dispatcher: CoroutineDispatcher = Dispatc
             result = Result.Error(exception)
         }
         delay(2000)
-        books.postValue(result)
         result
     }
 
@@ -47,5 +46,5 @@ class RemoteBookDataSource(private val dispatcher: CoroutineDispatcher = Dispatc
 
     override suspend fun deleteAllBooks(): Result<Any> = Result.Error(OperationCanceledException("no real remote database, cant manipulate data!"))
 
-    override fun observerBooks(): LiveData<Result<List<Book>>> = books
+    override fun observerBooks(): Flow<Result<List<Book>>> = flow { emit(getBooks()) }
 }

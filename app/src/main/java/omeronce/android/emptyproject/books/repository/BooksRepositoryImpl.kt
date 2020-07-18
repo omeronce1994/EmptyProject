@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
+import kotlinx.coroutines.flow.Flow
 import omeronce.android.emptyproject.books.datasource.BooksDataSource
 import omeronce.android.emptyproject.books.datasource.LocalBooksDataSource
 import omeronce.android.emptyproject.model.Result
@@ -16,7 +17,7 @@ class BooksRepositoryImpl(private val remoteDataSource: BooksDataSource, private
         return result
     }
 
-    override fun observeBooks(): LiveData<Result<List<Book>>> = localDataSource.observerBooks()
+    override fun observeBooks(): Flow<Result<List<Book>>> = localDataSource.observerBooks()
 
     override suspend fun saveBooks(books: List<Book>) {
         localDataSource.insertBooks(books)

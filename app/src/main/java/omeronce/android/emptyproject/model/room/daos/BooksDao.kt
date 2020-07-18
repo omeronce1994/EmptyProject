@@ -5,13 +5,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import omeronce.android.emptyproject.model.books.Book
 
 @Dao
 interface BooksDao {
 
     @Query("SELECT * FROM books")
-    fun observeBooks(): LiveData<List<Book>>
+    fun observeBooks(): Flow<List<Book>>
 
     @Query("SELECT * FROM books")
     suspend fun getBooks(): List<Book>
